@@ -4,7 +4,6 @@ import (
 	"github.com/charmbracelet/bubbles/progress"
 	tea "github.com/charmbracelet/bubbletea"
 	"strings"
-	"time"
 )
 
 type StepList struct {
@@ -29,9 +28,26 @@ func (s StepList) AddStep(step Step) StepList {
 }
 
 func (s StepList) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	return s, tea.Tick(150*time.Millisecond, func(t time.Time) tea.Msg {
-		return nil
-	})
+	var cmd tea.Cmd
+	for i := range s.steps {
+		model, stepCMD := s.steps[i].Update(msg)
+		cmd = tea.Batch(cmd, stepCMD)
+		s.steps[i] = model.(Step)
+	}
+
+	// Calculate the progress based on the number of completed steps
+	completedSteps := 0
+	for _, step := range s.steps {
+		if step.done { // Assuming Step has a method IsCompleted to check if it's done
+			completedSteps++
+		}
+	}
+	totalSteps := len(s.steps)
+	if totalSteps > 0 {
+		s.progressBar.SetPercent(float64(completedSteps) / float64(totalSteps))
+	}
+
+	return s, cmd
 }
 
 func (s StepList) View() string {
