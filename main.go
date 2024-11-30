@@ -14,7 +14,7 @@ func main() {
 	step := models.Init("Sun", ch)
 	go func() {
 		time.Sleep(time.Second * 12)
-		ch <- rand.IntN(1) == 0
+		ch <- rand.IntN(2) == 0
 	}()
 	program := tea.NewProgram(step)
 	if _, err := program.Run(); err != nil {
