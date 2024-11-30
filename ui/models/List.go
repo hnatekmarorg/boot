@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/charmbracelet/bubbles/progress"
 	tea "github.com/charmbracelet/bubbletea"
+	"strings"
 	"time"
 )
 
@@ -34,10 +35,10 @@ func (s StepList) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (s StepList) View() string {
-	result := ""
+	result := strings.Builder{}
 	for i := range s.steps {
-		result += s.steps[i].View() + "\n"
+		result.WriteString(s.steps[i].View() + "\n")
 	}
-	result += s.progressBar.View()
-	return result
+	result.WriteString(s.progressBar.View())
+	return result.String()
 }
