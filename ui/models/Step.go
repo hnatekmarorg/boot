@@ -30,7 +30,7 @@ type Step struct {
 	done    bool // If true it means that the task is done and we should not update it anymore.
 }
 
-func Init(purpose string, readChan chan bool) Step {
+func InitStep(purpose string, readChan chan bool) Step {
 	spinnerComponent := spinner.New()
 	spinnerComponent.Spinner = spinner.Dot
 	spinnerComponent.Style = pendingStyle
