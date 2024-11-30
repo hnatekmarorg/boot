@@ -10,6 +10,7 @@ import (
 const (
 	tickMark  = "✓"
 	crossMark = "✗"
+	hourglass = "⌛"
 )
 
 var (
@@ -47,7 +48,7 @@ func (s Step) View() string {
 	prefix := ""
 	style := pendingStyle
 	if !s.done {
-		prefix = s.Spinner.View()
+		prefix = hourglass
 	} else {
 		if s.done && s.result {
 			style = successStyle
@@ -61,14 +62,11 @@ func (s Step) View() string {
 }
 
 func (s Step) Init() tea.Cmd {
-	if s.done {
-		return nil
-	}
 	return s.Spinner.Tick
 }
 
 func (s Step) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmd tea.Cmd
+	var cmd tea.Cmd = nil
 	if !s.done {
 		select {
 		case result := <-s.Status:

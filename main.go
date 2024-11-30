@@ -20,7 +20,7 @@ func main() {
 		ch := make(chan bool, 1)
 		list = list.AddStep(models.InitStep(objectsInSpace[i], ch))
 		go func() {
-			time.Sleep(time.Second * 1)
+			time.Sleep(time.Duration(rand.IntN(5)+1) * time.Second)
 			ch <- rand.IntN(2) == 0
 		}()
 	}
